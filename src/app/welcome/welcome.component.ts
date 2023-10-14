@@ -13,9 +13,6 @@ export class WelcomeComponent {
   age : number = 25
 
   constructor(router : ActivatedRoute,private authService:AuthenticationService, private routerNav:Router){
-    if(!authService.isLoggedIn()){
-      routerNav.navigate(["login"]);
-    }
     this.name = router.snapshot.params['name']; 
   }
 

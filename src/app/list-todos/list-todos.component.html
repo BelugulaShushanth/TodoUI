@@ -1,11 +1,14 @@
 <div class="container">
     <h3>Todo's</h3>
+    <div class="alert alert-success" role="alert" *ngIf='deleteMsg'>{{ deleteMsg }} </div>
+    <button class="btn btn-primary" style="float: right;" (click)="addTodo()">Add Todo</button>
     <table class="table">
         <thead>
             <tr>
                 <th>Description</th>
                 <th>Target Date</th>
                 <th>Is Completed ?</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -13,6 +16,12 @@
                 <td>{{ todo.description }}</td>
                 <td>{{ todo.targetDate | date }}</td>
                 <td>{{ todo.done }}</td>
+                <td>
+                    <div class="d-grid gap-5 d-md-block">
+                        <button class="btn btn-success" (click)="updateTodo(todo.id)" style="margin-right: 10px;">Update</button>
+                        <button class="btn btn-danger" (click)="deleteTodo(todo.id)">Delete</button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

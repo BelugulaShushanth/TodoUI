@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../service/authentication.service';
 import { Router } from '@angular/router';
+import { TodoService } from '../service/todo.service';
 
 export class Todo {
 
@@ -21,15 +22,42 @@ export class Todo {
 })
 export class ListTodosComponent {
 
-  todos = [
-    new Todo(1, 'Learn Music', false, new Date()),
-    new Todo(2, 'Learn Angular', false, new Date()),
-    new Todo(3, 'Go to gym', true, new Date())
-  ]
+  user : string | null = ''
 
-  constructor(private authService:AuthenticationService, private router:Router){
-    if(!authService.isLoggedIn()){
-      router.navigate(["login"]);
-    }
+  todos : Todo[] = []
+
+  deleteMsg : string = ''
+
+  constructor(private authService:AuthenticationService, private router:Router,
+              private todoService : TodoService){
+   
+  }
+
+  ngOnInit(){
+      this.user = sessionStorage.getItem('authenticatedUser');
+      this.refreshTodos()
+  }
+
+  refreshTodos(){
+    this.todoService.getAllTodos(this.user).subscribe(
+      response => this.todos = response
+    )
+  }
+
+  deleteTodo(id:number){
+    this.todoService.deleteTodo(this.user,id).subscribe(
+      response => {
+        this.deleteMsg = `Todo with id ${id} is deleted successfully`
+        this.refreshTodos()
+      }
+    )
+  }
+
+  updateTodo(id:number){
+    this.router.navigate([`todo/${id}`])
+  }
+
+  addTodo(){
+    this.router.navigate([`todo/addTodo`])
   }
 }

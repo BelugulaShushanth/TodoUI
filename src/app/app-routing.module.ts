@@ -5,13 +5,17 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ListTodosComponent } from './list-todos/list-todos.component';
 import { LogoutComponent } from './logout/logout.component';
+import { RouteGuardService } from './service/route-guard.service';
+import { TodoComponent } from './todo/todo.component';
 
 const routes: Routes = [
   {path : '', component : LoginComponent},
   {path : 'login', component : LoginComponent},
-  {path: 'welcome/:name', component : WelcomeComponent},
-  {path: 'todos', component : ListTodosComponent},
-  {path: 'logout', component : LogoutComponent},
+  {path: 'welcome/:name', component : WelcomeComponent, canActivate:[RouteGuardService]},
+  {path: 'todos', component : ListTodosComponent, canActivate:[RouteGuardService]},
+  {path: 'todo/:id', component : TodoComponent, canActivate:[RouteGuardService]},
+  {path: 'todo/addTodo', component : TodoComponent, canActivate:[RouteGuardService]},
+  {path: 'logout', component : LogoutComponent, canActivate:[RouteGuardService]},
   {path : '**', component : PageNotFoundComponent}
 ];
 
