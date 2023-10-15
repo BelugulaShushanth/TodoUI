@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
+import { TodoService } from './todo.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor() { }
+  constructor(private todoService:TodoService) { }
 
-  authenticate(username : string, password : string){
-    if(username.toLowerCase() === 'sushanth' && password === '12345'){
-      sessionStorage.setItem('authenticatedUser', username);
-      return true;
-    }
-    return false;
+
+  authenticate(header:string){
+    return this.todoService.authenticateUser(header)
   }
 
   isLoggedIn(){
@@ -21,5 +19,6 @@ export class AuthenticationService {
 
   logout(){
     sessionStorage.removeItem('authenticatedUser')
+    sessionStorage.removeItem('authToken')
   }
 }

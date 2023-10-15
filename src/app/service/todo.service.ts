@@ -16,17 +16,14 @@ export class TodoService {
 
   private todoUrl:string = 'http://localhost:8191/user';
 
-  getHeader(){
-    let username = 'user';
-    let password = '3a26a8b9-a467-455e-a0e9-313ed1038652';
-    let header = new HttpHeaders({
-      Authorization : 'Basic ' + window.btoa(username+":"+password)
-    })
-    return header
+  
+  authenticateUser(header:string){
+    return this.httpClient.get(this.todoUrl+`/authenticate`, {headers : new HttpHeaders({Authorization : header})})
   }
+ 
 
   getAllTodos(username:string | null){
-    return this.httpClient.get<Todo[]>(this.todoUrl+`/${username}/getAllTodos`, {headers:this.getHeader()})
+    return this.httpClient.get<Todo[]>(this.todoUrl+`/${username}/getAllTodos`)
   }
 
   deleteTodo(username:string | null, id:number){
@@ -44,4 +41,6 @@ export class TodoService {
   addTodo(username:string | null, todo:Todo){
     return this.httpClient.post<Todo>(this.todoUrl+`/${username}/addTodo`,todo);
   }
+
+ 
 }

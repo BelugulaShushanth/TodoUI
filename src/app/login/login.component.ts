@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../service/authentication.service';
+import { TodoService } from '../service/todo.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +11,8 @@ import { AuthenticationService } from '../service/authentication.service';
 })
 export class LoginComponent {
 
-  constructor(private router: Router, public authService : AuthenticationService){}
+  constructor(private router: Router, public authService : AuthenticationService){
+    }
 
   username : string = ""
   password: string = ""
@@ -20,13 +23,26 @@ export class LoginComponent {
   loggedIn = false;
   invalidLogin = false;
 
-  handleLogin(){
-    if(this.authService.authenticate(this.username, this.password)){
-      this.invalidLogin = false; 
-      this.router.navigate(['welcome',this.username])
-    }
-    else{
-      this.invalidLogin = true;
-    }
+  getHeader(username : string, password : string){
+    return 'Basic '+window.btoa(username+":"+password)
   }
+
+  handleLogin(){
+
+    this.authService.authenticate(this.getHeader(this.username,this.password)).subscribe(
+      success => {
+        console.log("Success: "+success)
+        this.invalidLogin = false; 
+        sessionStorage.setItem('authenticatedUser', this.username)
+        sessionStorage.setItem('authToken',this.getHeader(this.username,this.password))
+        this.router.navigate(['welcome',this.username])
+      },
+      error => {
+        console.log(error)
+        this.invalidLogin = true;
+      }
+    )
+  }
+
+  
 }
